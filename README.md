@@ -39,7 +39,7 @@ All processing is done **locally in the browser** — no data is sent or stored 
 ## 🌐 Live Demo
 
 Hosted via GitHub Pages:  
-🔗 [https://alapan0.github.io/SMS-spam-detection/](https://alapan0.github.io/SMS-spam-detection/)
+🔗 [(https://alapan0.github.io/SMS-spam-Classifer/)]
 
 ---
 
