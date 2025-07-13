@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SMS Spam Detector</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    h1 {
+      color: #4c51bf;
+      margin-bottom: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border: 1px solid #cbd5e0;
+      border-radius: 0.5rem;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      background-color: #4c51bf;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #434190;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    .spam { color: #e53e3e; }
+    .not-spam { color: #38a169; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📩 SMS Spam Detector</h1>
+    <input type="text" id="messageInput" placeholder="Enter your SMS message..." />
+    <button onclick="detectSpam()">Detect</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const stopwords = ["a", "the", "and", "or", "but", "about", "above", "after", "again", "against", "all", "am", "an", "any", "are", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "by", "could", "did", "do", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how", "i", "if", "in", "into", "is", "it", "its", "itself", "just", "me", "more", "most"];
+    const spamKeywords = [
+      "win", "free", "money", "cash", "prize", "bonus", "reward", "gift", "jackpot",
+      "million", "earn", "income", "extra income", "fast cash", "easy money",
+      "urgent", "act now", "limited time", "exclusive deal", "don't miss", "hurry up",
+      "click here", "visit now", "check this out", "open now", "order now",
+      "buy now", "clearance", "lowest price", "cheap", "discount", "bargain",
+      "100% free", "trial", "no cost", "best deal", "risk-free", "guaranteed",
+      "selected", "congratulations", "you’ve won", "winner", "unsubscribe",
+      "get rich", "no obligation", "call now", "claim now", "subscribe"
+    ];
+
+    function detectSpam() {
+      const message = document.getElementById("messageInput").value.toLowerCase();
+      const words = message.replace(/[^a-z\\s]/g, "").split(" ").filter(w => w.length > 2 && !stopwords.includes(w));
+      let score = 0;
+      words.forEach(word => {
+        if (spamKeywords.includes(word)) score++;
+      });
+
+      const percentage = Math.min(100, Math.round((score / spamKeywords.length) * 100));
+      const resultDiv = document.getElementById("result");
+
+      if (score >= 1) {
+        resultDiv.innerHTML = `🚫 Spam Detected<br>Spam Likelihood: ${percentage}%`;
+        resultDiv.className = "result spam";
+      } else {
+        resultDiv.innerHTML = `✅ Not Spam<br>Spam Likelihood: ${percentage}%`;
+        resultDiv.className = "result not-spam";
+      }
+    }
+  </script>
+</body>
+</html>
