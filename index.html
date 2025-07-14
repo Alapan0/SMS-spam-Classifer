@@ -17,23 +17,27 @@
       height: 100vh;
       margin: 0;
     }
+
     .card {
       background-color: white;
       padding: 2rem;
       border-radius: 1.5rem;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      max-width: 450px;
-      width: 100%;
+      max-width: 500px;
+      width: 90%;
       text-align: center;
       transition: transform 0.3s ease-in-out;
     }
+
     .card:hover {
       transform: scale(1.02);
     }
+
     h1 {
       color: #4c51bf;
       margin-bottom: 1rem;
     }
+
     input {
       width: 100%;
       padding: 0.75rem;
@@ -43,6 +47,7 @@
       border-radius: 0.5rem;
       box-sizing: border-box;
     }
+
     button {
       width: 100%;
       padding: 0.75rem;
@@ -55,14 +60,17 @@
       cursor: pointer;
       transition: background-color 0.2s;
     }
+
     button:hover {
       background-color: #434190;
     }
+
     .result {
       margin-top: 1.5rem;
       font-size: 1.25rem;
       font-weight: bold;
     }
+
     .spam { color: #e53e3e; }
     .not-spam { color: #38a169; }
   </style>
@@ -76,32 +84,55 @@
   </div>
 
   <script>
-    const stopwords = ["a", "the", "and", "or", "but", "about", "above", "after", "again", "against", "all", "am", "an", "any", "are", "as", "at", "be", "because", "been", "before", "being", "below", "between", "both", "by", "could", "did", "do", "does", "doing", "down", "during", "each", "few", "for", "from", "further", "had", "has", "have", "having", "he", "her", "here", "hers", "herself", "him", "himself", "his", "how", "i", "if", "in", "into", "is", "it", "its", "itself", "just", "me", "more", "most"];
     const spamKeywords = [
-      "win", "free", "money", "cash", "prize", "bonus", "reward", "gift", "jackpot",
-      "million", "earn", "income", "extra income", "fast cash", "easy money",
-      "urgent", "act now", "limited time", "Exclusive deal", "don't miss", "hurry up",
-      "click here", "visit now", "check this out", "open now", "order now",
-      "buy now", "clearance", "lowest price", "cheap", "discount", "bargain",
-      "100% free", "trial", "no cost", "best deal", "risk-free", "guaranteed",
-      "selected", "congratulations", "you’ve won", "winner", "unsubscribe",
-      "get rich", "no obligation", "call now", "claim now", "subscribe", "Million dollars",
-      "Double your income", "Cash bonus", "Investment opportunity", "Free membership", "Apply now", "This won’t last",
-      "You’ve been selected", "Winner", "Click here", "Free investment", "Deal ending soon", "Don’t miss out" 
+      // Financial / Free Offers
+      "win", "won", "winner", "lottery", "lucky draw", "congratulations",
+      "free", "gift", "bonus", "reward", "jackpot", "cash", "money", "million", "billion",
+      "earn", "income", "salary", "fast cash", "extra income", "get rich", "financial freedom",
+      "prize", "offer", "investment", "no cost", "risk free", "double your income", "refinance", "act now",
+
+      // Sales / Promotions
+      "buy now", "order now", "limited time", "exclusive offer", "special deal", "hot deal", "best price", "cheap",
+      "discount", "clearance", "save big", "lowest price", "bargain", "today only", "only for you",
+
+      // Calls to Action
+      "click here", "open now", "visit now", "tap here", "check this out", "call now", "reply now",
+      "apply now", "subscribe now", "sign up", "get started", "join us", "register today",
+
+      // Urgency / Threats
+      "urgent", "immediately", "act fast", "time-sensitive", "don’t miss", "final notice", "last chance",
+      "expires soon", "important update", "security alert", "your account", "verify now", "respond immediately",
+
+      // Fake Authority
+      "bank notice", "atm blocked", "kyc expired", "password expired", "your account is suspended",
+      "account verification", "billing issue", "government grant", "official notification", "irs refund",
+
+      // Tech Scams
+      "device infected", "antivirus expired", "system alert", "update required", "malware", "unauthorized login",
+      "security breach", "tech support", "support team", "problem with your account",
+
+      // SMS Specific Examples
+      "free recharge", "you have won", "claim your prize", "click the link", "free trial", "congrats you won",
+      "limited validity", "gift card", "free coupon", "amazon gift", "flipkart voucher",
+
+      // Obfuscated forms
+      "fr33", "c@sh", "pr1ze", "m0ney", "cl1ck here", "b0nus", "0ffer"
     ];
 
     function detectSpam() {
-      const message = document.getElementById("messageInput").value.toLowerCase();
-      const words = message.replace(/[^a-z\\s]/g, "").split(" ").filter(w => w.length > 2 && !stopwords.includes(w));
+      const message = document.getElementById("messageInput").value.toLowerCase().trim();
       let score = 0;
-      words.forEach(word => {
-        if (spamKeywords.includes(word)) score++;
+
+      spamKeywords.forEach(keyword => {
+        if (message.includes(keyword)) {
+          score++;
+        }
       });
 
       const percentage = Math.min(100, Math.round((score / spamKeywords.length) * 100));
       const resultDiv = document.getElementById("result");
 
-      if (score >= 1) {
+      if (score > 0) {
         resultDiv.innerHTML = `🚫 Spam Detected<br>Spam Likelihood: ${percentage}%`;
         resultDiv.className = "result spam";
       } else {
