@@ -26,11 +26,6 @@
       max-width: 500px;
       width: 90%;
       text-align: center;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .card:hover {
-      transform: scale(1.02);
     }
 
     h1 {
@@ -121,18 +116,22 @@
 
     function detectSpam() {
       const message = document.getElementById("messageInput").value.toLowerCase().trim();
-      let score = 0;
+      const words = message.split(/\s+/);
+      const totalWords = words.length;
+      let spamCount = 0;
 
-      spamKeywords.forEach(keyword => {
-        if (message.includes(keyword)) {
-          score++;
-        }
+      words.forEach(word => {
+        spamKeywords.forEach(keyword => {
+          if (word.includes(keyword)) {
+            spamCount++;
+          }
+        });
       });
 
-      const percentage = Math.min(100, Math.round((score / spamKeywords.length) * 100));
+      const percentage = totalWords > 0 ? Math.min(100, Math.round((spamCount / totalWords) * 100)) : 0;
       const resultDiv = document.getElementById("result");
 
-      if (score > 0) {
+      if (spamCount > 0) {
         resultDiv.innerHTML = `🚫 Spam Detected<br>Spam Likelihood: ${percentage}%`;
         resultDiv.className = "result spam";
       } else {
